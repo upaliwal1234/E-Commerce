@@ -1,0 +1,15 @@
+version: '3.8' # Specify the Docker Compose file format version
+
+services:
+  # Define a service named 'e-commerce'
+  ejs-app:
+    build: . # Instruct Docker Compose to build the image from the current directory (where the Dockerfile is located)
+    container_name: e-commerce # Assign a specific name to the container
+    ports:
+      - "5000:5000" # Map port 5000 on the host to port 5000 in the container
+    restart: unless-stopped # Configure the container to restart unless it is explicitly stopped
+    env_file: # Specify an environment file to load environment variables from
+      - .env # Path to your environment file
+    # The 'volumes' section has been removed as per your request.
+    # command: npm start # This is already defined in your Dockerfile's CMD, but you can override it here if needed
+
