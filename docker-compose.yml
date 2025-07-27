@@ -1,4 +1,4 @@
-version: '3.8' # Specify the Docker Compose file format version
+# version: '3.8' # Specify the Docker Compose file format version
 
 services:
   # Define a service named 'e-commerce'
