@@ -96,7 +96,7 @@ app.post('/products/:id', async (req, res) => {
 })
 
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.redirect('/products');
 })
 
