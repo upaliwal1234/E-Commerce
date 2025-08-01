@@ -15,13 +15,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-app.get('/', (req, res) =>{
-    res.redirect('/products');
-})
-
 app.get('/products', async (req, res) => {
-    const products = await Product.find({});
-    res.render('products/index', { products });
+    try {
+        const products = await Product.find({});
+        res.render('products/index', { products });
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.get('/products/new', async (req, res) => {
@@ -30,58 +30,84 @@ app.get('/products/new', async (req, res) => {
 
 app.post('/products', async (req, res) => {
     const { name, image, price, description } = req.body;
-    await Product.create({ name, image, price, description });
-    res.redirect('/products');
+    try {
+        await Product.create({ name, image, price, description });
+        res.redirect('/products');
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.get('/products/:id', async (req, res) => {
     const { id } = req.params;
-    const product = await Product.findById(id);
-    const reviews = await Review.find({ "productId": `${id}` });
-    res.render('products/product', { product, reviews });
+    try {
+        const product = await Product.findById(id);
+        const reviews = await Review.find({ "productId": `${id}` });
+        res.render('products/product', { product, reviews });
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.delete('/products/:id', async (req, res) => {
     const { id } = req.params;
-    await Product.findByIdAndDelete(id);
-    res.redirect('/products');
+    try {
+        await Product.findByIdAndDelete(id);
+        res.redirect('/products');
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.get('/products/:id/edit', async (req, res) => {
     const { id } = req.params;
-    const product = await Product.findById(id);
-    res.render('products/edit', { product });
+    try {
+        const product = await Product.findById(id);
+        res.render('products/edit', { product });
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.patch('/products/:id', async (req, res) => {
     const { id } = req.params;
     const { name, image, price, description } = req.body;
-    const product = await Product.findById(id);
-    product.name = name;
-    product.image = image;
-    product.price = price;
-    product.description = description;
-
-    await product.save();
-
-    res.redirect('/products');
+    try {
+        const product = await Product.findById(id);
+        product.name = name;
+        product.image = image;
+        product.price = price;
+        product.description = description;
+        await product.save();
+        res.redirect('/products');
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.post('/products/:id', async (req, res) => {
     const { productId, rating, review } = req.body;
-    await Review.create({ productId, rating, review });
-    res.redirect(`/products/${productId}`);
+    try {
+        await Review.create({ productId, rating, review });
+        res.redirect(`/products/${productId}`);
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
-const PORT = process.env.PORT || 3000;
+
+app.get('*', (req, res) => {
+    res.redirect('/products');
+})
+
+const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         app.listen(PORT, () => {
             console.log('server is up at port', PORT);
         })
-        console.log('Connected to MongoDB');
     })
     .catch((err) => {
-        console.log(err);
+        console.log('Error connecting to MongoDB', err);
     })
