@@ -4,8 +4,8 @@ services:
   # Define a service named 'e-commerce'
   ejs-app:
     #build: . # Instruct Docker Compose to build the image from the current directory (where the Dockerfile is located)
-    image: upaliwal1234/E-Commerce:latest
-    container_name: E-Commerce # Assign a specific name to the container
+    image: upaliwal1234/e-commerce:latest
+    container_name: e-commerce # Assign a specific name to the container
     ports:
       - "5000:5000" # Map port 5000 on the host to port 5000 in the container
     restart: unless-stopped # Configure the container to restart unless it is explicitly stopped
