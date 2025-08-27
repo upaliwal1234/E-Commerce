@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Product = require('./models/product');
 
-mongoose.connect('mongodb+srv://admin:admin1234@practiceapi.us7xhdx.mongodb.net/Node-API?retryWrites=true&w=majority')
+mongoose.connect('mongodb://10.7.0.1:27017/Node-API')
     .then(() => {
         console.log('Connected to MongoDB');
     })
